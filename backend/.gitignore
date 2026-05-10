@@ -1,0 +1,4 @@
+node_modules/
+salary.db
+uploads/
+.env
