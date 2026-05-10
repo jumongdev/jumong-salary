@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Salary Manager",
+    "slug": "jumong-salary",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,17 +13,32 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jumongdev.salarymanager",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
+      "package": "com.jumongdev.salarymanager",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2163e130-79b1-4fdc-909a-6a35f00842c0"
+      }
+    },
+    "owner": "jumongdevs-organization",
+    "updates": {
+      "url": "https://u.expo.dev/2163e130-79b1-4fdc-909a-6a35f00842c0"
     }
   }
 }
