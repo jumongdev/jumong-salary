@@ -58,9 +58,11 @@ router.post('/employees', async (req, res) => {
       return res.status(400).json({ error: 'employee_id, full_name, phone, and password are required' });
     }
 
+    const empEmail = email || `${employee_id}@${phone.replace(/\D/g, '').slice(-6)}.placeholder`;
+
     const existing = db.queryOne(
       'SELECT id FROM users WHERE email = ? OR employee_id = ? OR phone = ?',
-      email || '', employee_id, phone
+      empEmail, employee_id, phone
     );
     if (existing) {
       return res.status(409).json({ error: 'Employee ID, email, or phone already exists' });
@@ -69,7 +71,7 @@ router.post('/employees', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = db.insert(
       'INSERT INTO users (employee_id, full_name, email, password, phone, position, department, join_date, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      employee_id, full_name, email || null, hashedPassword, phone, position || null, department || null, join_date || null, 'employee'
+      employee_id, full_name, empEmail, hashedPassword, phone, position || null, department || null, join_date || null, 'employee'
     );
 
     const user = db.queryOne('SELECT * FROM users WHERE id = ?', userId);
