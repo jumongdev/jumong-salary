@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
@@ -23,8 +23,8 @@ export default function LoginScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.header}>
-        <Text style={styles.logo}>💰</Text>
-        <Text style={styles.title}>Salary Manager</Text>
+        <Image source={require('../../assets/icon.png')} style={styles.logo} resizeMode="contain" />
+        <Text style={styles.title}>Jumong Pay</Text>
         <Text style={styles.subtitle}>Sign in with your phone or email</Text>
       </View>
 
@@ -43,7 +43,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   header: { alignItems: 'center', paddingTop: 80, paddingBottom: 40 },
-  logo: { fontSize: 64 },
+  logo: { width: 80, height: 80, borderRadius: 20 },
   title: { fontSize: 28, fontWeight: '700', color: '#1a1a1a', marginTop: 12 },
   subtitle: { fontSize: 15, color: '#666', marginTop: 6 },
   form: { paddingHorizontal: 24 },

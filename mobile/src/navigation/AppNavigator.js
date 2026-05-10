@@ -2,6 +2,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,6 +38,7 @@ const adminScreens = [
 
 function MainTabs({ route }) {
   const { user } = useAuth();
+  const insets = useSafeAreaInsets();
   const isAdmin = user?.role === 'admin';
   const allScreens = isAdmin ? [...commonScreens, ...adminScreens] : commonScreens;
 
@@ -51,7 +53,7 @@ function MainTabs({ route }) {
         },
         tabBarActiveTintColor: '#007aff',
         tabBarInactiveTintColor: '#999',
-        tabBarStyle: { backgroundColor: '#fff', borderTopColor: '#f0f0f0', paddingBottom: 4, height: 56 },
+        tabBarStyle: { backgroundColor: '#fff', borderTopColor: '#f0f0f0', paddingBottom: insets.bottom + 4, height: insets.bottom + 56 },
         tabBarLabelStyle: { fontSize: 11, fontWeight: '500' },
       })}
     >

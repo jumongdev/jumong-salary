@@ -77,7 +77,7 @@ export default function HomeScreen() {
         </View>
       </View>
       <View style={styles.otaBadge}>
-        <Text style={styles.otaText}>v1.0.2 - OTA Live ✅</Text>
+        <Text style={styles.otaText}>Jumong Pay v1.0.2</Text>
       </View>
     </ScrollView>
   );
