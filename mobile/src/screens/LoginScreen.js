@@ -4,15 +4,15 @@ import { useAuth } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
-  const [email, setEmail] = useState('john@company.com');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
-    if (!email || !password) return Alert.alert('Error', 'Email and password are required');
+    if (!loginId || !password) return Alert.alert('Error', 'Phone/Email and password are required');
     setLoading(true);
     try {
-      await login(email, password);
+      await login(loginId, password);
     } catch (err) {
       Alert.alert('Login failed', err.message);
     } finally {
@@ -25,19 +25,15 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.logo}>💰</Text>
         <Text style={styles.title}>Salary Manager</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
+        <Text style={styles.subtitle}>Sign in with your phone or email</Text>
       </View>
 
       <View style={styles.form}>
-        <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#999" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
+        <TextInput style={styles.input} placeholder="Phone number or email" placeholderTextColor="#999" value={loginId} onChangeText={setLoginId} autoCapitalize="none" keyboardType="default" />
         <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#999" value={password} onChangeText={setPassword} secureTextEntry />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
           {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Sign In</Text>}
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={styles.link}>Don't have an account? Register</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -54,5 +50,4 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#fff', borderRadius: 12, padding: 16, fontSize: 16, marginBottom: 12, borderWidth: 1, borderColor: '#e0e0e0' },
   button: { backgroundColor: '#007aff', borderRadius: 12, padding: 16, alignItems: 'center', marginTop: 4 },
   buttonText: { color: '#fff', fontSize: 17, fontWeight: '600' },
-  link: { color: '#007aff', textAlign: 'center', marginTop: 20, fontSize: 15 },
 });

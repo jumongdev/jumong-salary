@@ -42,13 +42,17 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { login, email, password } = req.body;
+    const identifier = login || email;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' });
+    if (!identifier || !password) {
+      return res.status(400).json({ error: 'Login (email or phone) and password required' });
     }
 
-    const user = db.queryOne('SELECT * FROM users WHERE email = ?', email);
+    const user = db.queryOne(
+      'SELECT * FROM users WHERE email = ? OR phone = ?',
+      identifier, identifier
+    );
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -78,6 +82,29 @@ router.post('/login', (req, res) => {
         role: user.role
       }
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put('/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { current_password, new_password } = req.body;
+    if (!current_password || !new_password) {
+      return res.status(400).json({ error: 'Current and new password required' });
+    }
+    if (new_password.length < 6) {
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    const user = db.queryOne('SELECT * FROM users WHERE id = ?', req.user.id);
+    if (!bcrypt.compareSync(current_password, user.password)) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    const hashed = await bcrypt.hash(new_password, 10);
+    db.run('UPDATE users SET password = ? WHERE id = ?', hashed, req.user.id);
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

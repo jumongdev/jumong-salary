@@ -6,30 +6,48 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 
 import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
 import SalaryScreen from '../screens/SalaryScreen';
 import AttendanceScreen from '../screens/AttendanceScreen';
 import LeavesScreen from '../screens/LeavesScreen';
 import DocumentsScreen from '../screens/DocumentsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import EmployeeListScreen from '../screens/admin/EmployeeListScreen';
+import EmployeeFormScreen from '../screens/admin/EmployeeFormScreen';
+import LeaveApprovalsScreen from '../screens/admin/LeaveApprovalsScreen';
+import AdminSalaryScreen from '../screens/admin/AdminSalaryScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function MainTabs() {
+const commonScreens = [
+  { name: 'Home', component: HomeScreen, icon: 'home' },
+  { name: 'Salary', component: SalaryScreen, icon: 'wallet' },
+  { name: 'Attendance', component: AttendanceScreen, icon: 'calendar' },
+  { name: 'Leaves', component: LeavesScreen, icon: 'bed' },
+  { name: 'Documents', component: DocumentsScreen, icon: 'document' },
+  { name: 'Profile', component: ProfileScreen, icon: 'person' },
+];
+
+const adminScreens = [
+  { name: 'Employees', component: EmployeeListScreen, icon: 'people' },
+  { name: 'Approvals', component: LeaveApprovalsScreen, icon: 'checkmark-circle' },
+  { name: 'AdminSalary', component: AdminSalaryScreen, icon: 'cash' },
+];
+
+function MainTabs({ route }) {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'admin';
+  const allScreens = isAdmin ? [...commonScreens, ...adminScreens] : commonScreens;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          const icons = {
-            Home: focused ? 'home' : 'home-outline',
-            Salary: focused ? 'wallet' : 'wallet-outline',
-            Attendance: focused ? 'calendar' : 'calendar-outline',
-            Leaves: focused ? 'bed' : 'bed-outline',
-            Documents: focused ? 'document' : 'document-outline',
-          };
-          return <Ionicons name={icons[route.name]} size={size} color={color} />;
+          const screen = allScreens.find(s => s.name === route.name);
+          const icon = screen?.icon || 'ellipse';
+          return <Ionicons name={focused ? icon : `${icon}-outline`} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#007aff',
         tabBarInactiveTintColor: '#999',
@@ -37,11 +55,9 @@ function MainTabs() {
         tabBarLabelStyle: { fontSize: 11, fontWeight: '500' },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Salary" component={SalaryScreen} />
-      <Tab.Screen name="Attendance" component={AttendanceScreen} />
-      <Tab.Screen name="Leaves" component={LeavesScreen} />
-      <Tab.Screen name="Documents" component={DocumentsScreen} />
+      {allScreens.map(s => (
+        <Tab.Screen key={s.name} name={s.name} component={s.component} />
+      ))}
     </Tab.Navigator>
   );
 }
@@ -61,12 +77,12 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="Main" component={MainTabs} />
-        ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="EmployeeForm" component={EmployeeFormScreen} />
           </>
+        ) : (
+          <Stack.Screen name="Login" component={LoginScreen} />
         )}
       </Stack.Navigator>
     </NavigationContainer>
