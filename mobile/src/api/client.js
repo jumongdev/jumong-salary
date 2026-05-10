@@ -1,9 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Platform } from 'react-native';
-// Change this to your computer's local IP if using Expo Go on a physical phone
-const API_HOST = Platform.OS === 'android' ? '192.168.1.71' : '192.168.1.71';
-const BASE_URL = `http://${API_HOST}:3000/api`;
+const BASE_URL = 'https://employee.jumongdev.com/api';
 
 async function request(endpoint, options = {}) {
   const token = await AsyncStorage.getItem('token');
