@@ -109,7 +109,7 @@ router.put('/employees/:id', async (req, res) => {
     sql += ' WHERE id = ?';
     params.push(req.params.id);
 
-    db.run(sql, ...params);
+    db.execute(sql, ...params);
 
     const user = db.queryOne('SELECT * FROM users WHERE id = ?', req.params.id);
     res.json(formatUser(user));
@@ -124,7 +124,7 @@ router.delete('/employees/:id', (req, res) => {
     if (!user) return res.status(404).json({ error: 'Employee not found' });
     if (user.id === req.user.id) return res.status(400).json({ error: 'Cannot delete yourself' });
 
-    db.run('UPDATE users SET email = ?, employee_id = ? WHERE id = ?',
+    db.execute('UPDATE users SET email = ?, employee_id = ? WHERE id = ?',
       `deleted_${req.params.id}@removed`, `DEL_${req.params.id}`, req.params.id);
     res.json({ message: 'Employee deactivated' });
   } catch (err) {
@@ -196,7 +196,7 @@ router.put('/salaries/:id', (req, res) => {
     const basic = basic_salary ?? existing.basic_salary;
     const net = parseFloat(basic) + parseFloat(housing) + parseFloat(transport) + parseFloat(other) - parseFloat(deduct) - parseFloat(t);
 
-    db.run(
+    db.execute(
       `UPDATE salaries SET basic_salary=?, housing_allowance=?, transport_allowance=?, other_allowances=?, deductions=?, tax=?, net_salary=?, payment_date=?, status=? WHERE id=?`,
       basic, housing, transport, other, deduct, t, net, payment_date || existing.payment_date, status || existing.status, req.params.id
     );
@@ -231,7 +231,7 @@ router.put('/leaves/:id/approve', (req, res) => {
     const leave = db.queryOne('SELECT * FROM leaves WHERE id = ?', req.params.id);
     if (!leave) return res.status(404).json({ error: 'Leave request not found' });
 
-    db.run('UPDATE leaves SET status = ?, approved_by = ? WHERE id = ?', 'approved', req.user.id, req.params.id);
+    db.execute('UPDATE leaves SET status = ?, approved_by = ? WHERE id = ?', 'approved', req.user.id, req.params.id);
     res.json({ message: 'Leave approved' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -243,7 +243,7 @@ router.put('/leaves/:id/reject', (req, res) => {
     const leave = db.queryOne('SELECT * FROM leaves WHERE id = ?', req.params.id);
     if (!leave) return res.status(404).json({ error: 'Leave request not found' });
 
-    db.run('UPDATE leaves SET status = ?, approved_by = ? WHERE id = ?', 'rejected', req.user.id, req.params.id);
+    db.execute('UPDATE leaves SET status = ?, approved_by = ? WHERE id = ?', 'rejected', req.user.id, req.params.id);
     res.json({ message: 'Leave rejected' });
   } catch (err) {
     res.status(500).json({ error: err.message });

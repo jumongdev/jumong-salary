@@ -103,7 +103,7 @@ router.put('/change-password', authenticateToken, async (req, res) => {
     }
 
     const hashed = await bcrypt.hash(new_password, 10);
-    db.run('UPDATE users SET password = ? WHERE id = ?', hashed, req.user.id);
+    db.execute('UPDATE users SET password = ? WHERE id = ?', hashed, req.user.id);
     res.json({ message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
