@@ -76,6 +76,9 @@ export default function HomeScreen() {
           <Text style={styles.cardSub}>{leaves.length} total requests</Text>
         </View>
       </View>
+      <View style={styles.otaBadge}>
+        <Text style={styles.otaText}>v1.0.1 - OTA Update Test</Text>
+      </View>
     </ScrollView>
   );
 }
@@ -93,4 +96,6 @@ const styles = StyleSheet.create({
   cardValue: { fontSize: 22, fontWeight: '700', color: '#1a1a1a', marginTop: 6 },
   cardSub: { fontSize: 13, color: '#888', marginTop: 4 },
   cardEmpty: { fontSize: 15, color: '#999', marginTop: 6 },
+  otaBadge: { alignItems: 'center', paddingVertical: 16, paddingBottom: 40 },
+  otaText: { fontSize: 12, color: '#aaa' },
 });
