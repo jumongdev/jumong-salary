@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 export default function LoginScreen({ navigation }) {
   const { login } = useAuth();
   const [loginId, setLoginId] = useState('');
-  const [password, setPassword] = useState('password123');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleLogin() {
