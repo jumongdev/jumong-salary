@@ -6,19 +6,16 @@ export default function EmployeeFormScreen({ route, navigation }) {
   const employee = route.params?.employee;
   const isEdit = !!employee;
 
-  const [employee_id, setEmployeeId] = useState(employee?.employee_id || '');
   const [full_name, setFullName] = useState(employee?.full_name || '');
-  const [email, setEmail] = useState(employee?.email || '');
   const [phone, setPhone] = useState(employee?.phone || '');
   const [position, setPosition] = useState(employee?.position || '');
-  const [department, setDepartment] = useState(employee?.department || '');
-  const [join_date, setJoinDate] = useState(employee?.join_date || '');
+  const [rate, setRate] = useState(employee?.rate?.toString() || '');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSave() {
-    if (!employee_id || !full_name || !phone) {
-      return Alert.alert('Error', 'Employee ID, full name, and phone are required');
+    if (!full_name || !phone) {
+      return Alert.alert('Error', 'Full name and mobile number are required');
     }
     if (!isEdit && !password) {
       return Alert.alert('Error', 'Password is required for new employees');
@@ -26,7 +23,7 @@ export default function EmployeeFormScreen({ route, navigation }) {
 
     setLoading(true);
     try {
-      const body = { employee_id, full_name, email, phone, position, department, join_date };
+      const body = { full_name, phone, position, rate: parseFloat(rate) || 0 };
       if (password) body.password = password;
 
       if (isEdit) {
@@ -55,32 +52,23 @@ export default function EmployeeFormScreen({ route, navigation }) {
       </View>
 
       <View style={styles.form}>
-        <Text style={styles.label}>Employee ID *</Text>
-        <TextInput style={styles.input} value={employee_id} onChangeText={setEmployeeId} placeholder="e.g. EMP001" editable={!isEdit} />
-
         <Text style={styles.label}>Full Name *</Text>
-        <TextInput style={styles.input} value={full_name} onChangeText={setFullName} placeholder="John Doe" />
+        <TextInput style={styles.input} value={full_name} onChangeText={setFullName} placeholder="Juan Dela Cruz" />
 
-        <Text style={styles.label}>Phone *</Text>
+        <Text style={styles.label}>Mobile (Username) *</Text>
         <TextInput style={styles.input} value={phone} onChangeText={setPhone} placeholder="09123456789" keyboardType="phone-pad" />
 
-        <Text style={styles.label}>Email</Text>
-        <TextInput style={styles.input} value={email} onChangeText={setEmail} placeholder="john@company.com" keyboardType="email-address" autoCapitalize="none" />
-
         <Text style={styles.label}>Position</Text>
-        <TextInput style={styles.input} value={position} onChangeText={setPosition} placeholder="Software Engineer" />
+        <TextInput style={styles.input} value={position} onChangeText={setPosition} placeholder="Cashier" />
 
-        <Text style={styles.label}>Department</Text>
-        <TextInput style={styles.input} value={department} onChangeText={setDepartment} placeholder="Engineering" />
+        <Text style={styles.label}>Rate (₱)</Text>
+        <TextInput style={styles.input} value={rate} onChangeText={setRate} placeholder="0.00" keyboardType="decimal-pad" />
 
-        <Text style={styles.label}>Join Date</Text>
-        <TextInput style={styles.input} value={join_date} onChangeText={setJoinDate} placeholder="YYYY-MM-DD" />
-
-        <Text style={styles.label}>{isEdit ? 'New Password (leave blank to keep current)' : 'Default Password *'}</Text>
-        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Min 6 characters" secureTextEntry />
+        <Text style={styles.label}>{isEdit ? 'New Password (leave blank to keep current)' : 'Password *'}</Text>
+        <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Min 6 characters" secureTextEntry autoCorrect={false} autoCapitalize="none" textContentType="password" />
 
         <TouchableOpacity style={styles.button} onPress={handleSave} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{isEdit ? 'Update' : 'Create Employee'}</Text>}
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>{isEdit ? 'Update Employee' : 'Create Employee'}</Text>}
         </TouchableOpacity>
       </View>
     </ScrollView>

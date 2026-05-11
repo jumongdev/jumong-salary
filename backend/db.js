@@ -31,6 +31,7 @@ async function initDb() {
       password TEXT NOT NULL,
       phone TEXT,
       position TEXT,
+      rate REAL DEFAULT 0,
       department TEXT,
       join_date TEXT,
       role TEXT DEFAULT 'employee',
@@ -87,6 +88,8 @@ async function initDb() {
       FOREIGN KEY (approved_by) REFERENCES users(id)
     )
   `);
+
+  try { db.run('ALTER TABLE users ADD COLUMN rate REAL DEFAULT 0'); } catch (e) { /* already exists */ }
 
   db.run(`
     CREATE TABLE IF NOT EXISTS documents (

@@ -51,8 +51,8 @@ export default function EmployeeListScreen({ navigation }) {
           </View>
           <View style={styles.cardInfo}>
             <Text style={styles.name}>{item.full_name}</Text>
-            <Text style={styles.detail}>{item.position || 'No position'} • {item.department || 'N/A'}</Text>
-            <Text style={styles.detail}>{item.phone || 'No phone'} {item.email ? `• ${item.email}` : ''}</Text>
+            <Text style={styles.detail}>{item.position || 'No position'} • {item.phone || 'No phone'}</Text>
+            <Text style={styles.detail}>Rate: ₱{parseFloat(item.rate || 0).toFixed(2)}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item)}>

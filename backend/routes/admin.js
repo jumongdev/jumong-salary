@@ -50,28 +50,28 @@ router.get('/employees/:id', (req, res) => {
   }
 });
 
-router.post('/employees', async (req, res) => {
+  router.post('/employees', async (req, res) => {
   try {
-    const { employee_id, full_name, email, phone, password, position, department, join_date } = req.body;
+    const { full_name, phone, password, position, rate } = req.body;
 
-    if (!employee_id || !full_name || !phone || !password) {
-      return res.status(400).json({ error: 'employee_id, full_name, phone, and password are required' });
+    if (!full_name || !phone || !password) {
+      return res.status(400).json({ error: 'full_name, phone, and password are required' });
     }
 
-    const empEmail = email || `${employee_id}@${phone.replace(/\D/g, '').slice(-6)}.placeholder`;
+    const empEmail = `${phone.replace(/\D/g, '').slice(-6)}@jumongpay.app`;
 
     const existing = db.queryOne(
-      'SELECT id FROM users WHERE email = ? OR employee_id = ? OR phone = ?',
-      empEmail, employee_id, phone
+      'SELECT id FROM users WHERE email = ? OR phone = ?',
+      empEmail, phone
     );
     if (existing) {
-      return res.status(409).json({ error: 'Employee ID, email, or phone already exists' });
+      return res.status(409).json({ error: 'Phone number already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = db.insert(
-      'INSERT INTO users (employee_id, full_name, email, password, phone, position, department, join_date, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      employee_id, full_name, empEmail, hashedPassword, phone, position || null, department || null, join_date || null, 'employee'
+      'INSERT INTO users (employee_id, full_name, email, password, phone, position, rate, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      `EMP${Date.now()}`, full_name, empEmail, hashedPassword, phone, position || null, rate || 0, 'employee'
     );
 
     const user = db.queryOne('SELECT * FROM users WHERE id = ?', userId);
@@ -86,19 +86,15 @@ router.put('/employees/:id', async (req, res) => {
     const existing = db.queryOne('SELECT * FROM users WHERE id = ?', req.params.id);
     if (!existing) return res.status(404).json({ error: 'Employee not found' });
 
-    const { full_name, email, phone, position, department, join_date, password } = req.body;
+    const { full_name, phone, position, rate, password } = req.body;
 
-    if (email && email !== existing.email) {
-      const dup = db.queryOne('SELECT id FROM users WHERE email = ? AND id != ?', email, req.params.id);
-      if (dup) return res.status(409).json({ error: 'Email already in use' });
-    }
     if (phone && phone !== existing.phone) {
       const dup = db.queryOne('SELECT id FROM users WHERE phone = ? AND id != ?', phone, req.params.id);
       if (dup) return res.status(409).json({ error: 'Phone already in use' });
     }
 
-    let sql = 'UPDATE users SET full_name = ?, email = ?, phone = ?, position = ?, department = ?, join_date = ?';
-    const params = [full_name || existing.full_name, email || existing.email, phone || existing.phone, position || existing.position, department || existing.department, join_date || existing.join_date];
+    let sql = 'UPDATE users SET full_name = ?, phone = ?, position = ?, rate = ?';
+    const params = [full_name || existing.full_name, phone || existing.phone, position || existing.position, rate ?? existing.rate];
 
     if (password) {
       const hashed = await bcrypt.hash(password, 10);
