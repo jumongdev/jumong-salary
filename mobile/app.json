@@ -37,8 +37,14 @@
       }
     },
     "owner": "jumongdevs-organization",
+    "plugins": [
+      "expo-updates"
+    ],
     "updates": {
-      "url": "https://u.expo.dev/2163e130-79b1-4fdc-909a-6a35f00842c0"
+      "url": "https://u.expo.dev/2163e130-79b1-4fdc-909a-6a35f00842c0",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
     }
   }
 }
