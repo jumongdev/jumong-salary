@@ -49,6 +49,26 @@ async function autoSeed() {
   console.log('Seed complete');
 }
 
+function ensureAdmin() {
+  const existing = db.queryOne('SELECT id FROM users WHERE email = ?', 'admin@jumongdev.com');
+  if (existing) return;
+
+  const admin = db.queryOne("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
+  const pw = bcrypt.hashSync('581984', 10);
+
+  if (admin) {
+    db.execute('UPDATE users SET email = ?, password = ?, full_name = ? WHERE id = ?',
+      'admin@jumongdev.com', pw, 'Admin User', admin.id);
+    console.log('Admin account updated: admin@jumongdev.com');
+  } else {
+    db.insert(
+      'INSERT INTO users (employee_id, full_name, email, password, phone, position, department, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'ADMIN001', 'Admin User', 'admin@jumongdev.com', pw, '555-0000', 'System Admin', 'Administration', 'admin'
+    );
+    console.log('Admin account created: admin@jumongdev.com');
+  }
+}
+
 const app = express();
 
 app.use(cors());
@@ -69,6 +89,7 @@ app.get('/api/health', (req, res) => {
 async function start() {
   await db.initDb();
   await autoSeed();
+  ensureAdmin();
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

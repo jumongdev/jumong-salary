@@ -18,7 +18,7 @@ async function seed() {
     ['EMP001', 'John Doe', 'john@company.com', password, '555-0101', 'Software Engineer', 'Engineering', '2023-01-15', 'employee'],
     ['EMP002', 'Jane Smith', 'jane@company.com', password, '555-0102', 'Product Manager', 'Product', '2023-03-01', 'employee'],
     ['EMP003', 'Bob Johnson', 'bob@company.com', password, '555-0103', 'Designer', 'Design', '2023-06-01', 'employee'],
-    ['ADMIN001', 'Admin User', 'admin@company.com', password, '555-0000', 'System Admin', 'Administration', '2022-01-01', 'admin'],
+    ['ADMIN001', 'Admin User', 'admin@jumongdev.com', password, '555-0000', 'System Admin', 'Administration', '2022-01-01', 'admin'],
   ];
 
   for (const u of users) {
