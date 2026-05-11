@@ -21,6 +21,6 @@ jobs:
           cache-dependency-path: mobile/package-lock.json
 
       - run: npm ci
-      - run: npx eas update --branch preview --auto --non-interactive
+      - run: npx -p eas-cli eas update --branch preview --auto --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
