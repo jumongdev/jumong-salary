@@ -16,8 +16,8 @@ function formatUser(user) {
 router.get('/employees', (req, res) => {
   try {
     const { search, department } = req.query;
-    let sql = 'SELECT id, employee_id, full_name, email, phone, position, department, join_date, role, created_at FROM users';
-    const conditions = [];
+    let sql = 'SELECT id, employee_id, full_name, email, phone, position, rate, department, join_date, role, created_at FROM users';
+    const conditions = ["employee_id NOT LIKE 'DEL_%'"];
     const params = [];
 
     if (search) {
